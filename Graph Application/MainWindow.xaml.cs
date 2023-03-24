@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Some code for calculating nodes was inspired by stackoverflow, geeksforgeeks, and reddit
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +24,9 @@ namespace Graph_Application
         private double GraphRadius = 100;
 
         private readonly Point[] nodePos;
+        
 
+        //This is wher you input the matrix as I did not have time to make a full wpf table.
         public int[,] AdjacencyMatrix =
         {
             {0, 0, 0, 0, 1, 0, 0, 0, 0},
@@ -40,6 +44,8 @@ namespace Graph_Application
         public MainWindow()
         {
             InitializeComponent();    
+
+            //array of all point positions
             nodePos = new Point[AdjacencyMatrix.GetLength(0)];
 
             CalculateNode();
@@ -50,7 +56,10 @@ namespace Graph_Application
         {
             for (int i = 0; i < AdjacencyMatrix.GetLength(0); i++)
             {
-                double angle = (2 * Math.PI * i) / AdjacencyMatrix.GetLength(0);
+                //takes a circle (full circle in radians) and splits it into slices (amount of slices depends on matrix) 
+                double angle = (2 * Math.PI) * i / AdjacencyMatrix.GetLength(0);
+
+                //finds coordinates based on the angle
                 double x = GraphCenterX + GraphRadius * Math.Cos(angle);
                 double y = GraphCenterY + GraphRadius * Math.Sin(angle);
                 nodePos[i] = new Point(x, y);
@@ -65,6 +74,7 @@ namespace Graph_Application
         }
         private void DrawNode(Point pos)
         {
+            //creates a circle
             Ellipse node = new Ellipse
             {
                 Width = 10,
@@ -72,6 +82,8 @@ namespace Graph_Application
                 Fill = Brushes.Black,
                 Stroke = Brushes.Black,
             };
+
+            //sets circle position based on node coordinates
             Canvas.SetLeft(node, pos.X);
             Canvas.SetTop(node, pos.Y);
             canvas.Children.Add(node);
@@ -83,6 +95,8 @@ namespace Graph_Application
             {
                 for (int j = i + 1; j < AdjacencyMatrix.GetLength(1); j++)
                 {
+
+                    //itterates through matrix and if the matrix slot has a 1 in it draw an edge for the nodes in the slot
                     if (AdjacencyMatrix[i, j] == 1)
                     {
                         DrawEdge(nodePos[i], nodePos[j]);
